@@ -1,2 +1,4 @@
-# Articles
-Tech Aticles from network 
+# 说明
+这里是我在网络上收集的有关IT技术方面的文章，大部分都是自己看后，根据自己的理解，重新编辑过的，若有侵犯原作者版权的问题，请及时联系，立删；
+
+Email:yencheng.ho@gmail.com
