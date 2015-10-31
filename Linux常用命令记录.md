@@ -1,4 +1,4 @@
-#Linux 常用命令记录
+#【原创】Linux 常用命令记录
 ##RPM
 	$ wget http://xx.org/xxx.x86_64.rpm
 	$ rpm -ivh xxx.rpm
