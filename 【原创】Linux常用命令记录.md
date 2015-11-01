@@ -10,6 +10,7 @@
 	$ rpm -qi httpd   httpd的信息
 	$ rpm -ql httpd   列出文件安装目录
 	$ rpm -qpR xxx.rpm  查看包的依赖关系
+	$ rpm -e --nodeps 不检查包的依赖而删除
 
 ##YUM
 可解决增加或删除rpm包时遇到的倚赖性问题；推荐使用YUM而不是RPM；<br>
