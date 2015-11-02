@@ -22,16 +22,28 @@
 
 另外，编译还需要pcre、zlib和ssl，pcre是为了实现重写rewrite，zlib是为了gzip压缩。
 
-我的CentOS7中已安装了pcre，可以不用安装了；如果没有安装，可利用wget下载源码包make install安装，注意的是此时需要g++编译器。
+我的CentOS7中已默认安装了pcre，但最好还是要重新安装；可利用wget下载源码包make install安装，注意的是此时需要g++编译器。
 
 	# wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.36.tar.gz
 	# ./configure
 	# make
 	# make install
+>目前nginx暂时还不支持pcre2...一定要用pcre8.....哭...
 
-zlib也是一样，下载源码后configure后make install安装即可。
+别忘记安装pcre-devel模块，不然编译期间会报错：
 
-CentOS7中默认安装了OpenSSL，可以不用安装；如果没有安装，wget下来后解压即可。
+下载地址：[http://rpmfind.net/linux/rpm2html/search.php?query=pcre-devel](http://rpmfind.net/linux/rpm2html/search.php?query=pcre-devel)
+
+>由于安装pcre并未采用二进制包安装的方式，所以安装pcre-devel的时候包依赖找不到，这个时候可以采用强制安装的方式：<br>
+>rpm -i --force --nodeps  pcre-devel-8.32-14.el7.x86_64.rpm
+
+CentOS7中默认安装了OpenSSL，但最好也是重新安装，记录下安装路径。
+
+下载网站：[http://www.openssl.org/source/](http://www.openssl.org/source/)
+
+CentOS7中默认安装了zlib，但相同，最好也是重新编译、安装，记录下安装路径。
+
+下载网站：[http://www.zlib.net/](http://www.zlib.net/)
 
 ##4 Configure
 
@@ -76,4 +88,26 @@ CentOS7中默认安装了OpenSSL，可以不用安装；如果没有安装，wge
 	# make
 	# make install
 
+>如果编译中出现 "make[2]: *** No rule to make target `libpcre.la'. Stop."表明pcre版本不对，最好不用pcre2
 
+##5 启动
+启动命令nginx即在sbin中
+
+	# /sbin/nginx -c /usr/server/nginx/nginx.conf
+	
+>如果出现 nginx: [emerg] getpwnam(“nginx”) failed 的错误<br>
+>第一种方法：打开nginx.conf，将user nobody的注释去掉既可。
+>第二种方法：添加nginx组和nginx用户，如下所示：
+
+	# /usr/sbin/groupadd -f nginx
+	# /usr/sbin/useradd -g nginx nginx
+
+如果需要停止服务的话，可以先查出PID号：
+	
+	# cat /var/run/nginx/nginx.pid
+	> 97227
+	# kill 97227 
+
+不停止服务的情况下，重新加载配置文件：
+
+	# /usr/server/nginx/sbin/nginx -s reload
