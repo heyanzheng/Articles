@@ -90,7 +90,7 @@ CentOS7中默认安装了zlib，但相同，最好也是重新编译、安装，
 
 >如果编译中出现 "make[2]: *** No rule to make target `libpcre.la'. Stop."表明pcre版本不对，最好不用pcre2
 
-##5 启动
+##5 启动/停止
 
 进入 --prefix 中指定的Nginx安装目录，启动命令nginx：
 
@@ -103,13 +103,13 @@ CentOS7中默认安装了zlib，但相同，最好也是重新编译、安装，
 	# /usr/sbin/groupadd -f nginx
 	# /usr/sbin/useradd -g nginx nginx
 
-需要停止服务，如果采用如下方式：
+要停止服务，可采用如下方式：
 	
 	# cat /var/run/nginx/nginx.pid
 	> 97227
 	# kill 97227 
 
-还有先查询Nginx主进程号：
+还可以先查询Nginx主进程号：
 
 	# ps -ef | grep nginx
 	> 97227
@@ -119,18 +119,31 @@ CentOS7中默认安装了zlib，但相同，最好也是重新编译、安装，
 	# kill -QUIT 97227
 	# kill -TERM 97227
 	# pkill -9 97227
-	
-如果你采用上述方式，那你就等着哭吧....  
 
-总有一天，重启时就会报nginx.pid丢失的错误从而启动不起来....等待你的只有重装！
-
-网上有说使用 sbin/nginx -c conf/nginx.conf 可以依然可以启动，但我试了下，还是一样的错误！MD！
-
-
-那应该如何正确的停止服务呢？
+另外，还可以这样：
 
 	# sbin/nginx -s stop     快速停止
 	# sbin/nginx -s quit      完整有序的停止【推荐】
+
+***
+
+当服务器重启时，可能会报 nginx.pid丢失 的错误从而启动不起来....
+
+网上有说使用 sbin/nginx -c conf/nginx.conf 后即可启动，但我试了下，还是一样的错误！MD！
+
+如果出现这样的情况，其实应该先查看下pid文件所在的文件夹，即 --pid-path 所在的目录，我的机器为/var/run/nginx
+
+	# cd /var/run/nginx
+	> -bash: cd: /var/run/nginx: 没有那个文件或目录
+
+那既然没有这个文件夹，就自己建立起来：
+
+	# cd /var/run
+	# mkdir nginx
+
+这时候再重新启动试试，竟然可以啦！无语。
+
+***
 
 不停止服务的情况下，重新启动服务：
 
