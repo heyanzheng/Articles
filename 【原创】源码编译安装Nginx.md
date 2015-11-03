@@ -127,11 +127,15 @@ CentOS7中默认安装了zlib，但相同，最好也是重新编译、安装，
 
 ***
 
+#### 处理nginx.pid丢失的错误
+
 当服务器重启时，可能会报 nginx.pid丢失 的错误从而启动不起来....
 
-网上有说使用 sbin/nginx -c conf/nginx.conf 后即可启动，但我试了下，还是一样的错误！MD！
+>nginx: [emerg] open() "/var/run/nginx/nginx.pid" failed (2: No such file or directory)
 
-如果出现这样的情况，其实应该先查看下pid文件所在的文件夹，即 --pid-path 所在的目录，我的机器为/var/run/nginx
+网上有说加上配置文件使用 sbin/nginx -c conf/nginx.conf 后即可启动，但我试了下，还是一样的错误！MD！
+
+如果你也出现了这样的情况，其实应该先查看下pid文件所在的文件夹，即 --pid-path 所在的目录，我的机器为/var/run/nginx
 
 	# cd /var/run/nginx
 	> -bash: cd: /var/run/nginx: 没有那个文件或目录
