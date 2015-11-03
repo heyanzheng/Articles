@@ -91,12 +91,13 @@ CentOS7中默认安装了zlib，但相同，最好也是重新编译、安装，
 >如果编译中出现 "make[2]: *** No rule to make target `libpcre.la'. Stop."表明pcre版本不对，最好不用pcre2
 
 ##5 启动
-启动命令nginx即在sbin中
 
-	# /sbin/nginx -c /usr/server/nginx/nginx.conf
+进入 --prefix 中指定的Nginx安装目录，启动命令nginx：
+
+	# sbin/nginx -c nginx.conf
 	
 >如果出现 nginx: [emerg] getpwnam(“nginx”) failed 的错误<br>
->第一种方法：打开nginx.conf，将user nobody的注释去掉既可。
+>第一种方法：打开nginx.conf，将user nobody的注释去掉既可。<br>
 >第二种方法【推荐】：添加nginx组和nginx用户，如下所示：
 
 	# /usr/sbin/groupadd -f nginx
@@ -128,12 +129,12 @@ CentOS7中默认安装了zlib，但相同，最好也是重新编译、安装，
 
 那应该如何正确的停止服务呢？
 
-	# nginx -s stop     快速停止
-	# nginx -s quit      完整有序的停止【推荐】
+	# sbin/nginx -s stop     快速停止
+	# sbin/nginx -s quit      完整有序的停止【推荐】
 
 不停止服务的情况下，重新启动服务：
 
-	# /usr/server/nginx/sbin/nginx -s reload
+	# sbin/nginx -s reload
 
 如果修改了配置文件的话，重新启动前最好先验证下配置文件是否正确：
 
