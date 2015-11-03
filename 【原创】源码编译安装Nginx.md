@@ -97,17 +97,44 @@ CentOS7中默认安装了zlib，但相同，最好也是重新编译、安装，
 	
 >如果出现 nginx: [emerg] getpwnam(“nginx”) failed 的错误<br>
 >第一种方法：打开nginx.conf，将user nobody的注释去掉既可。
->第二种方法：添加nginx组和nginx用户，如下所示：
+>第二种方法【推荐】：添加nginx组和nginx用户，如下所示：
 
 	# /usr/sbin/groupadd -f nginx
 	# /usr/sbin/useradd -g nginx nginx
 
-如果需要停止服务的话，可以先查出PID号：
+需要停止服务，如果采用如下方式：
 	
 	# cat /var/run/nginx/nginx.pid
 	> 97227
 	# kill 97227 
 
-不停止服务的情况下，重新加载配置文件：
+还有先查询Nginx主进程号：
+
+	# ps -ef | grep nginx
+	> 97227
+
+然后向master进程发送信号的方式：
+
+	# kill -QUIT 97227
+	# kill -TERM 97227
+	# pkill -9 97227
+	
+如果你采用上述方式，那你就等着哭吧....  
+
+总有一天，重启时就会报nginx.pid丢失的错误从而启动不起来....等待你的只有重装！
+
+网上有说使用 sbin/nginx -c conf/nginx.conf 可以依然可以启动，但我试了下，还是一样的错误！MD！
+
+
+那应该如何正确的停止服务呢？
+
+	# nginx -s stop     快速停止
+	# nginx -s quit      完整有序的停止【推荐】
+
+不停止服务的情况下，重新启动服务：
 
 	# /usr/server/nginx/sbin/nginx -s reload
+
+如果修改了配置文件的话，重新启动前最好先验证下配置文件是否正确：
+
+	# sbin/nginx -t -c conf/nginx.conf
