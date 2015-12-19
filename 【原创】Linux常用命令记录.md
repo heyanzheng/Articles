@@ -217,7 +217,20 @@ compress也是一个压缩程序，但使用compress的人不如gzip和bzip2的�
 
 ##权限
 
-r=4，w=2，x=1，三种身份的权限是r+w+x的和，如果没有相应的权限，则值为0
+###将普通用户添加到sudoers中
+
+> hyz 不在 sudoers 文件夹中，此事将被报告。
+
+1. 首先进入root模式：`$ su - `
+2. 添加文件的写权限：`$ chmod u+w /etc/sudoers`
+3. 编辑/etc/sudoers文件	`$ vi sudoers`
+4. 找到`root ALL=(ALL)`，并在下面添加`hyz ALL=(ALL)` hyz是你的用户名，保存 `:wq`
+5. 撤销文件的写权限：`chmod u-w /etc/sudoers`
+6. 重新执行原有命令
+
+###权限赋值
+
+r=4，w=2，x=1，三种身份的权限是r+w+，如果没有相应的权限，则值为0
 
 owner=rwx=4+2+1=7，group=rwx=4+2+1=7，others=---=0+0+0=0，所以这个文件的将改变权限值为770
 	
