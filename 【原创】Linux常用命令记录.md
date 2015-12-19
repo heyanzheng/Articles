@@ -62,7 +62,7 @@ yum的配置文件
 > -r:递归删除，用于目录删除
 
 
-##More/Cat
+##More
 more命令是将文件以一页一页的显示，方便使用者逐页阅读；最基本的指令就是按空白键（space）就往下一页显示，按 b 键就会往回（back）一页显示；<br>
 命令参数：
 >-n       定义屏幕大小为n行<br>
@@ -82,7 +82,7 @@ more命令是将文件以一页一页的显示，方便使用者逐页阅读；�
 	$ ls -l | more 5
 >列出目录下的文件，每页显示5个文件信息
 
-<br>
+##Cat
 
 cat(concatenate files and print on the standard output)命令主要用来查看文件内容，创建文件，文件合并，追加文件内容等功能；
 >-s  当遇到有连续两行以上的空白行，就代换为一行的空白行<br>
@@ -94,10 +94,79 @@ cat(concatenate files and print on the standard output)命令主要用来查看�
 	$ cat file1.txt file2.txt >> file3.txt  (不会清除file3.txt里面原有内容)
 
 ##MD5
+
 	$ md5sum xxx.tar.gz > a.txt
 	$ cat a.txt
 
+
+##网络
+
+虚拟机上不了网，ping\curl都无法解析host时，即有可能网卡被禁用了，可采取如下措施：<br>
+1.查看系统网络配置
+
+	$ip addr
+
+2.修改网卡配置
+
+	$vi /etc/sysconfig/network-scripts/ifcfg-xxx
+
+3.选择使用共享IP的对应网卡文件，打开，修改ONBOOT为yes，启用此网卡<br>
+4.保存退出，重启网络
+
+	$service network restart
+
+> 或者是  /etc/init.d/network restart
+
+5.再次连接即可
+
+***
+
+列出所有端口：
+	
+	$ netstat -ntlp
+
+查看80端口占用情况:
+	
+	$ lsof -i tcp:80
+
+> lsof: command not found 系统中无此命令，则使用yum来安装<br>
+> $ yum install lsof
+
+##系统服务
+
+	$ systemctl enable httpd.service (在centos7中代替chkconfig httpd on) 设置为自动启动
+	$ systemctl disable httpd.service 设置为不自动启动
+	$ systemctl status httpd
+	$ systemctl start httpd
+	$ systemctl stop httpd
+	$ systemctl restart httpd
+	$ systemctl list-units --type=service  显示所有已启动的服务
+
+
+##权限
+
+###将普通用户添加到sudoers中
+
+> hyz 不在 sudoers 文件夹中，此事将被报告。
+
+1. 首先进入root模式：`$ su - `
+2. 添加文件的写权限：`$ chmod u+w /etc/sudoers`
+3. 编辑/etc/sudoers文件	`$ vi sudoers`
+4. 找到`root ALL=(ALL)`，并在下面添加`hyz ALL=(ALL)` hyz是你的用户名，保存 `:wq`
+5. 撤销文件的写权限：`chmod u-w /etc/sudoers`
+6. 重新执行原有命令
+
+###权限赋值
+
+r=4，w=2，x=1，三种身份的权限是r+w+，如果没有相应的权限，则值为0
+
+owner=rwx=4+2+1=7，group=rwx=4+2+1=7，others=---=0+0+0=0，所以这个文件的将改变权限值为770
+	
+	$ chmod 770 error.log
+
+
 ##打包和压缩
+
 Linux中的很多压缩程序只能针对一个文件进行压缩，这样当你想要压缩一大堆文件时，需要先借助另外的工具将这一大堆文件先打成一个包，然后再用压缩程序进行压缩。
 
 	$ tar -cf all.tar *.jpg
@@ -178,60 +247,4 @@ compress也是一个压缩程序，但使用compress的人不如gzip和bzip2的�
 	$7za x xxx.7z
 >也可以用于打包解压zip文件
 
-##网络
-虚拟机上不了网，ping\curl都无法解析host时，即有可能网卡被禁用了，可采取如下措施：<br>
-1.查看系统网络配置
 
-	$ip addr
-2.修改网卡配置
-
-	$vi /etc/sysconfig/network-scripts/ifcfg-xxx
-
-3.选择使用共享IP的对应网卡文件，打开，修改ONBOOT为yes，启用此网卡<br>
-4.保存退出，重启网络
-
-	$service network restart
-> 或者是  /etc/init.d/network restart
-
-5.再次连接即可
-
-***
-
-列出所有端口：
-	
-	$ netstat -ntlp
-查看80端口占用情况:
-	
-	$ lsof -i tcp:80
-
-##系统服务
-
-	$ systemctl enable httpd.service (在centos7中代替chkconfig httpd on) 设置为自动启动
-	$ systemctl disable httpd.service 设置为不自动启动
-	$ systemctl status httpd
-	$ systemctl start httpd
-	$ systemctl stop httpd
-	$ systemctl restart httpd
-	$ systemctl list-units --type=service  显示所有已启动的服务
-
-
-##权限
-
-###将普通用户添加到sudoers中
-
-> hyz 不在 sudoers 文件夹中，此事将被报告。
-
-1. 首先进入root模式：`$ su - `
-2. 添加文件的写权限：`$ chmod u+w /etc/sudoers`
-3. 编辑/etc/sudoers文件	`$ vi sudoers`
-4. 找到`root ALL=(ALL)`，并在下面添加`hyz ALL=(ALL)` hyz是你的用户名，保存 `:wq`
-5. 撤销文件的写权限：`chmod u-w /etc/sudoers`
-6. 重新执行原有命令
-
-###权限赋值
-
-r=4，w=2，x=1，三种身份的权限是r+w+，如果没有相应的权限，则值为0
-
-owner=rwx=4+2+1=7，group=rwx=4+2+1=7，others=---=0+0+0=0，所以这个文件的将改变权限值为770
-	
-	$ chmod 770 error.log
