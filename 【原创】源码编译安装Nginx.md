@@ -6,10 +6,14 @@
 下载完后为nginx-1.8.0.tar.gz。
 
 ##2 解压
-首先使用FTP工具将下载好的文件上传到服务器中，我使用的是FileZilla，目录为~/tmp；<br>
+使用FTP工具将下载好的文件上传到服务器中，我使用的是FileZilla，目录为~/tmp；<br>
 然后使用命令解压：
 
 	# tar -xzf nginx-1.8.0.tar.gz
+
+>使用这种方式最好使用md5sum验证是否完整
+
+或者直接使用wget直接下载（还是最推荐这种方式，不会丢包）
 
 ##3 安装编译环境
 我当前使用的是CentOS 7 Minimal-1503-01环境，所以有些已经安装，但也有许多没有安装，这些在下面会一一说明。
@@ -28,14 +32,16 @@
 	# ./configure
 	# make
 	# make install
->目前nginx暂时还不支持pcre2...一定要用pcre8.....哭...
+>最好到pcre官网（http://www.pcre.org/）去寻找下载地址，上面的地址经常会变动<br>
+>目前nginx暂时还不支持pcre2...一定要用pcre1....别问我为什么知道的....让我哭会.....
 
 别忘记安装pcre-devel模块，不然编译期间会报错：
 
 下载地址：[http://rpmfind.net/linux/rpm2html/search.php?query=pcre-devel](http://rpmfind.net/linux/rpm2html/search.php?query=pcre-devel)
 
 >由于安装pcre并未采用二进制包安装的方式，所以安装pcre-devel的时候包依赖找不到，这个时候可以采用强制安装的方式：<br>
->rpm -i --force --nodeps  pcre-devel-8.32-14.el7.x86_64.rpm
+
+rpm -i --force --nodeps  pcre-devel-8.32-14.el7.x86_64.rpm
 
 CentOS7中默认安装了OpenSSL，但最好也是重新安装，记录下安装路径。
 
@@ -45,7 +51,15 @@ CentOS7中默认安装了zlib，但相同，最好也是重新编译、安装，
 
 下载网站：[http://www.zlib.net/](http://www.zlib.net/)
 
+	$ wget http://zlib.net/zlib-1.2.8.tar.gz
+	$ cd zlib-1.2.8
+	$ ./configure --prefix=/usr/local/bin --libdir=/usr/local/lib
+	$ make
+	$ make install
+
 ##4 Configure
+
+返回nginx目录下，开始编译：
 
 	./configure --prefix=/usr/server/nginx \
 	--sbin-path=/usr/server/nginx/sbin/ \
@@ -84,6 +98,8 @@ CentOS7中默认安装了zlib，但相同，最好也是重新编译、安装，
 >--without-http_gzip_module      #删除压缩的HTTP服务器的响应模块。编译并运行此模块需要zlib库<br>
 >--without-http_rewrite_module     #删除重写模块。编译并运行此模块需要PCRE库支持<br>
 >--without-http_proxy_module      #删除http_proxy模块<br>
+
+上面所列中，没有的目录，需要先手工添加
 
 	# make
 	# make install
