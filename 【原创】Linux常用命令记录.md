@@ -132,6 +132,24 @@ cat(concatenate files and print on the standard output)命令主要用来查看�
 > lsof: command not found 系统中无此命令，则使用yum来安装<br>
 > $ yum install lsof
 
+###固定IP地址
+
+如果想配置静态IP地址，非常简单，找到对应网卡所在的文件`/etc/sysconfig/network-scripts/ifcfg-xxx`
+
+将`BOOTPROTO=static`，增加三条记录：
+
+	IPADDR=192.168.1.xxx
+	NETMASK=255.255.255.0
+	NM_CONTROLLED=NO
+
+> NM_CONTROLLED=NO表示该接口将通过此配置来生效，而不是通过`network-manager`<br>
+> CentOS7/RHEL7默认安装网络管理器`networkmanager`，并处于启用状态
+
+	$ systemctl status networkmanager
+	$ nmcli dev status
+
+> nmcli dev status 来检查受网络管理器管理的网络接口
+
 ##系统服务
 
 	$ systemctl enable httpd.service (在centos7中代替chkconfig httpd on) 设置为自动启动
