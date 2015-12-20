@@ -45,3 +45,33 @@ exit退出后，开始安全设置向导
 
 	$ systemctl enable mariadb
 
+***
+
+安装完后，Mariadb默认的数据文件目录为/var/lib/mysql，若想改变这个目录的话（生产环境下多为数据和程序分离或磁盘原因）
+
+首先停掉数据库服务
+
+	$ systemctl stop mariadb
+
+将整个/var/lib/mysql文件夹复制到目标文件夹（如/usr/service）
+
+	$ cp -a /var/lib/mysql/* /usr/service/
+
+> -a 将文件属性一起拷贝，否则可能出现很多问题
+
+编辑Mariadb的配置文件/etc/my.cnf
+
+	$ cp my.cnf my.cnf.ogi
+	$ vi my.cnf
+
+修改`datadir=/usr/service`，不需要修改socket等其它信息
+
+可顺便看下my.cnf.d/server.cnf client.cnf 文件信息，看是否有datadir信息；若没有，则不再需要修改
+
+	$ chown -R mysql:mysql /usr/service
+
+启动服务
+
+	$ systemctl start mariadb
+
+
